@@ -355,10 +355,18 @@ pub async fn do_append_async(
         "payload"=> TypeCode::STRING,
         "ttl"=> TypeCode::INT64,
     };
-    let fields = param_types
-        .clone()
+    let fields =vec![
+        ("fxa_uid", TypeCode::STRING),
+        ("fxa_kid", TypeCode::STRING),
+        ("collection_id", TypeCode::INT64),
+        ("batch_id", TypeCode::STRING),
+        ("batch_bso_id", TypeCode::STRING),
+        ("sortindex", TypeCode::INT64),
+        ("payload", TypeCode::STRING),
+        ("ttl", TypeCode::INT64),
+    ]
         .into_iter()
-        .map(|(name, field_type)| struct_type_field(&name, field_type.get_code()))
+        .map(|(name, field_type)| struct_type_field(name, field_type))
         .collect();
 
     if !insert.is_empty() {
