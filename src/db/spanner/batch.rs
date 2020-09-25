@@ -355,7 +355,7 @@ pub async fn do_append_async(
         "payload"=> TypeCode::STRING,
         "ttl"=> TypeCode::INT64,
     };
-    let fields =vec![
+    let fields = vec![
         ("fxa_uid", TypeCode::STRING),
         ("fxa_kid", TypeCode::STRING),
         ("collection_id", TypeCode::INT64),
@@ -365,9 +365,9 @@ pub async fn do_append_async(
         ("payload", TypeCode::STRING),
         ("ttl", TypeCode::INT64),
     ]
-        .into_iter()
-        .map(|(name, field_type)| struct_type_field(name, field_type))
-        .collect();
+    .into_iter()
+    .map(|(name, field_type)| struct_type_field(name, field_type))
+    .collect();
 
     if !insert.is_empty() {
         let mut list_values = ListValue::new();
