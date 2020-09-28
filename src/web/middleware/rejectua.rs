@@ -75,18 +75,7 @@ where
     fn call(&mut self, sreq: ServiceRequest) -> Self::Future {
         match sreq.headers().get(USER_AGENT) {
             Some(header) if header.to_str().map_or(false, should_reject) => {
-                let state = match &sreq.app_data::<Data<ServerState>>() {
-                    Some(v) => v.clone(),
-                    None => {
-                        return Either::Left(future::ok(
-                            sreq.into_response(
-                                HttpResponse::InternalServerError()
-                                    .body("Err: No State".to_owned())
-                                    .into_body(),
-                            ),
-                        ))
-                    }
-                };
+                let state = &sreq.app_data::<Data<ServerState>>().expect("Err: No State");
                 debug!("Rejecting User-Agent: {:?}", header);
                 Metrics::from(state.as_ref()).incr("error.rejectua");
 
