@@ -393,7 +393,6 @@ pub async fn do_append_async(
         sqlparams.insert("values".to_owned(), values);
         let mut sqlparam_types = HashMap::new();
         sqlparam_types.insert("values".to_owned(), param_type);
-        dbg!("### Doing insert...");
         db.sql(
             "INSERT INTO batch_bsos (fxa_uid, fxa_kid, collection_id, batch_id, batch_bso_id,
                                     sortindex, payload, ttl)
@@ -403,13 +402,11 @@ pub async fn do_append_async(
         .param_types(sqlparam_types)
         .execute_dml_async(&db.conn)
         .await?;
-        dbg!("### done");
     }
 
     // assuming that "update" is rarer than an insert, we can try using the standard API for that.
     if !update.is_empty() {
         for val in update {
-            dbg!("### Updating...");
             db.sql(
                 "UPDATE batch_bsos SET sortindex=@sortindex, payload=@payload, ttl=@ttl
                 WHERE fxa_uid=@fxa_uid AND fxa_kid=@fxa_kid AND collection_id=@collection_id
