@@ -75,9 +75,11 @@ where
     fn call(&mut self, sreq: ServiceRequest) -> Self::Future {
         match sreq.headers().get(USER_AGENT) {
             Some(header) if header.to_str().map_or(false, should_reject) => {
-                let state = &sreq.app_data::<Data<ServerState>>().expect("Err: No State");
+                let data = sreq
+                    .app_data::<Data<ServerState>>()
+                    .expect("No app_data ServerState");
                 debug!("Rejecting User-Agent: {:?}", header);
-                Metrics::from(state.as_ref()).incr("error.rejectua");
+                Metrics::from(data.get_ref()).incr("error.rejectua");
 
                 Either::Left(future::ok(
                     sreq.into_response(
